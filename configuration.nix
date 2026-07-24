@@ -140,8 +140,8 @@
     gaa = "git add .";
 
     # NixOs
-    rebuild = "cd /home/tochka/nix; git add .; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos";
-    updatere = "cd /home/tochka/nix; git add .; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos --recreate-lock-file";
+    rebuild = "cd /home/tochka/nix; git add .; git status; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos";
+    updatere = "cd /home/tochka/nix; git add .; git status; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos --recreate-lock-file";
   };
 
   # Graphics
@@ -165,11 +165,14 @@
 
   services.flatpak.enable = true;
 
+  programs.gpu-screen-recorder.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
      # System
      home-manager
+     wf-recorder
      kdePackages.dolphin
 
      # CLI

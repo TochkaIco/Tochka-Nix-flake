@@ -137,7 +137,7 @@
     gs = "git status";
     gl = "git log";
     gds = "git diff --staged";
-    gaa = "git add .";
+    gia = "git add .; git status";
 
     # NixOs
     rebuild = "cd /home/tochka/nix; git add .; git status; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos";

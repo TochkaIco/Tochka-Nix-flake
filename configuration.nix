@@ -18,6 +18,11 @@
 
   nix.settings.experimental-features = ["nix-command" "flakes"];
 
+  nix.settings = {
+    max-jobs = 15;
+    cores = 7;
+  };
+
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -119,6 +124,10 @@
 
   programs.fish.enable = true;
 
+  environment.sessionVariables = {
+    GTK_USE_PORTAL = "1";
+  };
+
   # Aliases
   environment.shellAliases = {
     # Bash
@@ -131,8 +140,8 @@
     gaa = "git add .";
 
     # NixOs
-    rebuild = "git add .; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos";
-    updatere = "git add .; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos --recreate-lock-file";
+    rebuild = "cd /home/tochka/nix; git add .; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos";
+    updatere = "cd /home/tochka/nix; git add .; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos --recreate-lock-file";
   };
 
   # Graphics
@@ -154,11 +163,14 @@
     };
   };
 
+  services.flatpak.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
      # System
      home-manager
+     kdePackages.dolphin
 
      # CLI
      vim
@@ -169,6 +181,7 @@
      wget
      kitty
      foot
+     tree
 
      # Regular Apps
      telegram-desktop
@@ -176,6 +189,8 @@
      spotify
      spicetify-cli
      rnote
+ 
+     freecad
 
      # Programming
      vscode

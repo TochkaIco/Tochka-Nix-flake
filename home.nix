@@ -26,6 +26,29 @@ in
     size = 24;
   }; 
 
+  gtk = {
+    enable = true;
+    iconTheme = {
+    package = pkgs.adwaita-icon-theme;
+    name = "Adwaita";
+    };
+  };
+
+  wayland.windowManager.hyprland.settings = {
+    bind = [
+      "SUPER, T, exec, foot"
+    ];
+  };
+
+  xdg.configFile."caelestia/hypr-vars.lua" = {
+    text = ''
+      return {
+        fileExplorer = "dolphin",
+      }
+    '';
+    force = true;
+  }; 
+
   # User-only packages
   home.packages = [
     inputs.caelestia-cli.packages.${pkgs.stdenv.hostPlatform.system}.with-shell
@@ -80,5 +103,5 @@ in
   };
  
   # Vis config
-  xdg.configFile."vis/visrc.lua".source = ./visrc.lua;
+  # xdg.configFile."vis/visrc.lua".source = ./visrc.lua;
 }

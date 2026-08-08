@@ -9,7 +9,7 @@ in
   home.homeDirectory = "/home/tochka";
 
   home.stateVersion = "26.05";
-
+ 
   home.sessionVariables = {
     HYPRCURSOR_THEME = "Bibata-Modern-Classic";
     HYPRCURSOR_SIZE = "24";
@@ -39,7 +39,7 @@ in
       "SUPER, T, exec, foot"
     ];
   };
-
+ 
   xdg.configFile."caelestia/hypr-vars.lua" = {
     text = ''
       return {
@@ -47,7 +47,40 @@ in
       }
     '';
     force = true;
-  }; 
+  };
+
+  # Keyboard layouts
+  xdg.configFile."hypr/hyprland/input.lua" = {
+    force = true;
+    text = ''
+      local vars = require("variables")
+
+      hl.config({
+        input = {
+          kb_layout          = "us,se,ru",
+          kb_options = "grp:alt_shift_toggle",
+          numlock_by_default = false,
+          repeat_delay       = 250,
+          repeat_rate        = 35,
+          focus_on_close     = 1,
+
+          touchpad           = {
+            natural_scroll       = true,
+            disable_while_typing = vars.touchpadDisableTyping,
+            scroll_factor        = vars.touchpadScrollFactor,
+          },
+        },
+
+        binds = {
+          scroll_event_delay = 0,
+        },
+
+        cursor = {
+          hotspot_padding = 1,
+        },
+      })
+    '';
+  };
 
   # User-only packages
   home.packages = [

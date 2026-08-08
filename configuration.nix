@@ -95,7 +95,7 @@
   users.users."tochka" = {
     isNormalUser = true;
     description = "Fedor Romanov";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
     #  thunderbird
     ];
@@ -124,8 +124,13 @@
 
   programs.fish.enable = true;
 
+  virtualisation.docker.enable = true; 
+
   environment.sessionVariables = {
     GTK_USE_PORTAL = "1";
+
+    WLR_NO_HARDWARE_CURSORS = "0";
+    NIXOS_OZONE_WL = "1";
   };
 
   # Aliases
@@ -137,18 +142,37 @@
     gs = "git status";
     gl = "git log";
     gds = "git diff --staged";
-    gia = "git add .; git status";
+    ga = "git add .; git status";
+    gc-m = "git commit -m";
+    gp = "git push";
+
+    # Laravel
+    sail = "./vendor/bin/sail";
+    sailupd = "sail down; sail up -d; sail npm run dev";
+    laratest = "composer run format; sail pest; vendor/bin/rector; git add .; git status";
 
     # NixOs
     rebuild = "cd /home/tochka/nix; git add .; git status; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos";
-    updatere = "cd /home/tochka/nix; git add .; git status; sudo nixos-rebuild switch --flake /home/tochka/nix/.#nixos --recreate-lock-file";
+    updatere = "cd /home/tochka/nix; git add .; git status; sudo nix flake update";
   };
+
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Experimental = true;
+      };
+    };
+  };
+
+  services.blueman.enable = true;
 
   # Graphics
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-  };
+  }; 
 
   fonts = {
     enableDefaultPackages = true;
@@ -167,6 +191,12 @@
 
   programs.gpu-screen-recorder.enable = true;
 
+  services.clamav = {
+    daemon.enable = true;
+    updater.enable = true;
+    updater.interval = "daily";
+  };
+ 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -185,9 +215,11 @@
      kitty
      foot
      tree
+     nmap
 
      # Regular Apps
      telegram-desktop
+     signal-desktop
      vesktop
      spotify
      spicetify-cli
@@ -200,10 +232,19 @@
      jetbrains.phpstorm
      jetbrains.webstorm
 
-     tailscale
+     opencode
+     antigravity
 
      laravel
-     php85
+     (php85.withExtensions ({ enabled, all }: enabled ++ [
+       all.pdo_sqlite
+       all.pdo_mysql
+       all.mbstring
+       all.xml
+       all.curl
+       all.zip
+     ]))
+     php85Packages.composer
      nodejs_26
      python3
   ];
